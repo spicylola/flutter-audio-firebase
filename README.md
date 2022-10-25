@@ -8,6 +8,7 @@ The Long Term Goal of this project is create an Audio/Record app that can
 4. A Button that can generate a link and send an audio to firebase (TODO)
 5. A Button that can play a link from a list of widgets set by rules (probably read audio links from table collection in FB)(TODO)
 
+![Screenshot](audio_prototype.png)
 ## Getting Started
 ***Note will need to update line 523, 693: 
  .../../development/flutter/.pub-cache/hosted/pub.dartlang.org/assets_audio_player-3.0.5/lib/src/assets_audio_player.dart
