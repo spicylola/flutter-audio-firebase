@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_sound/flutter_sound.dart';
 import 'package:assets_audio_player/assets_audio_player.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import 'dart:async';
@@ -9,9 +11,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:path/path.dart' as path;
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:path_provider/path_provider.dart';
 
-
-void main() {
+void main()  async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -129,6 +133,27 @@ class _MyHomePageState extends State<MyHomePage> {
   }
   Future<void> stopPlayFunc() async {
     recordingPlayer.stop();
+  }
+
+  Future uploadAudioToFireBase() async {
+    // Create a storage reference from our app
+    final storageRef = FirebaseStorage.instance.ref();
+    String fileName = "testing_audio" + DateTime.now().millisecondsSinceEpoch.toString();
+    final audioFileRef = storageRef.child("$fileName");
+
+    Directory appDocDir = await getApplicationDocumentsDirectory();
+
+    //String filePath = '${appDocDir.absolute}/$pathToAudio';
+    File file = File(pathToAudio!);
+
+    // TODO: try/catch this
+    await audioFileRef.putFile(file);
+
+    // try {
+    //   await audioFileRef.putFile(file);
+    // } on firebase_core.FirebaseException catch (e) {
+    //   // ...
+    // }
   }
 
   Future<void> testPlayFunc() async {
@@ -298,6 +323,9 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
+
+            ElevatedButton(onPressed: uploadAudioToFireBase,
+                child: Text("Upload Audio"))
 
 
           ],
